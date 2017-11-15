@@ -1,12 +1,5 @@
 import React from 'react'
-import {
-  Grid,
-  Row,
-  Col,
-  FormGroup,
-  FormControl,
-  Button
-} from 'react-bootstrap'
+import { Grid, Row, Col, FormGroup, FormControl, Button } from 'react-bootstrap'
 
 import _ from 'lodash'
 import axios from 'axios'
@@ -20,14 +13,14 @@ import actions from '~/actions'
 
 const style = require('./style.scss')
 
-const DEFAULT_TAG = "All"
+const DEFAULT_TAG = 'All'
 
 export default class ManageView extends React.Component {
   constructor(props) {
     super(props)
-    this.state = { 
+    this.state = {
       modules: [],
-      tags: [DEFAULT_TAG, 'Connector', 'Analytics', 'Marketing', 'NLP', 'Others'], 
+      tags: [DEFAULT_TAG, 'Connector', 'Analytics', 'Marketing', 'NLP', 'Others'],
       tag: DEFAULT_TAG,
       search: '',
       loading: true
@@ -44,8 +37,7 @@ export default class ManageView extends React.Component {
   queryModules() {
     this.setState({ loading: true })
 
-    return axios.get('/api/module/all')
-    .then((result) => {
+    return axios.get('/api/module/all').then(result => {
       this.setState({
         modules: result.data,
         loading: false
@@ -54,8 +46,7 @@ export default class ManageView extends React.Component {
   }
 
   refresh() {
-    this.queryModules()
-    .then(() => {
+    this.queryModules().then(() => {
       setTimeout(actions.fetchModules, 5000)
     })
   }
@@ -63,7 +54,7 @@ export default class ManageView extends React.Component {
   getResultFromSearch(modules) {
     const result = []
 
-    modules.forEach((m) => {
+    modules.forEach(m => {
       let search = _.join([m.name, m.description, m.author], ' ')
       search = _.lowerCase(search)
 
@@ -99,21 +90,27 @@ export default class ManageView extends React.Component {
   renderSearch() {
     const classNames = classnames(style.search, 'bp-search')
 
-    return <Row>
+    return (
+      <Row>
         <Col sm={12}>
           <FormGroup>
-            <FormControl id="search"
+            <FormControl
+              id="search"
               type="text"
               placeholder="Search"
               className={classNames}
-              onChange={::this.handleSearchChange}/>
+              onChange={::this.handleSearchChange}
+            />
           </FormGroup>
         </Col>
       </Row>
+    )
   }
 
   renderTag(label) {
-    const handleChange = (event) => { ::this.handleChangeCategory(event, label) }
+    const handleChange = event => {
+      ;::this.handleChangeCategory(event, label)
+    }
 
     const classNames = classnames({
       ['bp-button']: true,
@@ -122,17 +119,21 @@ export default class ManageView extends React.Component {
       ['bp-button-default']: label !== this.state.tag
     })
 
-    return <Button key={label} className={classNames} onClick={handleChange}>
+    return (
+      <Button key={label} className={classNames} onClick={handleChange}>
         {label}
       </Button>
+    )
   }
 
   renderTags() {
-    return <Row>
+    return (
+      <Row>
         <Col sm={12} className={style.tags}>
           {this.state.tags.map(this.renderTag)}
         </Col>
       </Row>
+    )
   }
 
   renderModules() {
@@ -147,14 +148,16 @@ export default class ManageView extends React.Component {
     const splitOn = _.floor((_.size(modules) + 1) / 2)
     const [first, second] = _.chunk(modules, splitOn)
 
-    return <Row>
+    return (
+      <Row>
         <Col sm={6}>
-          <ModulesComponent modules={first} refresh={this.refresh.bind(this)}/>
+          <ModulesComponent modules={first} refresh={this.refresh.bind(this)} />
         </Col>
         <Col sm={6}>
-          <ModulesComponent modules={second} refresh={this.refresh.bind(this)}/>
+          <ModulesComponent modules={second} refresh={this.refresh.bind(this)} />
         </Col>
       </Row>
+    )
   }
 
   render() {
@@ -164,7 +167,9 @@ export default class ManageView extends React.Component {
 
     return (
       <ContentWrapper>
-        {PageHeader(<span> Modules</span>)}
+        <PageHeader>
+          <span> Modules</span>
+        </PageHeader>
         <Grid fluid>
           <Row>
             <Col sm={12} md={10} mdOffset={1}>

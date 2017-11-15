@@ -3,22 +3,21 @@ import crypto from 'crypto'
 import ua from 'universal-analytics'
 import { machineId } from 'node-machine-id'
 
-module.exports = (botfile) => {
-
+module.exports = botfile => {
   let visitor = null
   let queued = []
 
   machineId()
-  .catch(() => {
-    const hash = crypto.createHash('sha256')
-    hash.update(os.arch() + os.hostname() + os.platform() + os.type())
-    return hash.digest('hex')
-  })
-  .then(mid => {
-    visitor = ua('UA-90044826-1', mid, { strictCidFormat: false })
-    queued.forEach(a => a())
-    queued = []
-  })
+    .catch(() => {
+      const hash = crypto.createHash('sha256')
+      hash.update(os.arch() + os.hostname() + os.platform() + os.type())
+      return hash.digest('hex')
+    })
+    .then(mid => {
+      visitor = ua('UA-90044826-1', mid, { strictCidFormat: false })
+      queued.forEach(a => a())
+      queued = []
+    })
 
   const track = (category, action, label = null, value = null) => {
     if (!!botfile.optOutStats) {
@@ -30,7 +29,9 @@ module.exports = (botfile) => {
       return
     }
 
-    visitor.event(category, action, label, value, () => { /* ignore errors */ })
+    visitor.event(category, action, label, value, () => {
+      /* ignore errors */
+    })
   }
 
   const trackException = message => {
@@ -43,7 +44,9 @@ module.exports = (botfile) => {
       return
     }
 
-    visitor.event(message, () => { /* ignore errors */ })
+    visitor.event(message, () => {
+      /* ignore errors */
+    })
   }
 
   return { track, trackException }

@@ -6,7 +6,6 @@ const Promise = require('bluebird')
 const _ = require('lodash')
 
 describe('configurator', function() {
-
   let getCalled = false
   let setCalled = false
 
@@ -36,13 +35,12 @@ describe('configurator', function() {
   })
 
   describe('createConfig', function() {
-
     it('throws if invalid name', function() {
       const fns = [
-          () => createConfig({ kvs, name: '' }),
-          () => createConfig({ kvs, name: null }),
-          () => createConfig({ kvs, name: 'botpress-#$' })
-        ]
+        () => createConfig({ kvs, name: '' }),
+        () => createConfig({ kvs, name: null }),
+        () => createConfig({ kvs, name: 'botpress-#$' })
+      ]
 
       _.each(fns, fn => expect(fn).to.throw(/invalid configuration name/i))
     })
@@ -87,13 +85,13 @@ describe('configurator', function() {
       }
 
       const fns = [
-          () => createConfig(createWith({ type: 'string', default: false })),
-          () => createConfig(createWith({ type: 'string', default: null })),
-          () => createConfig(createWith({ type: 'string', default: 'hello', validation: () => false })),
-          () => createConfig(createWith({ type: 'bool', default: '' })),
-          () => createConfig(createWith({ type: 'choice', default: null })),
-          () => createConfig(createWith({ type: 'choice', validation: ['A', 'B'], default: 'C' }))
-        ]
+        () => createConfig(createWith({ type: 'string', default: false })),
+        () => createConfig(createWith({ type: 'string', default: null })),
+        () => createConfig(createWith({ type: 'string', default: 'hello', validation: () => false })),
+        () => createConfig(createWith({ type: 'bool', default: '' })),
+        () => createConfig(createWith({ type: 'choice', default: null })),
+        () => createConfig(createWith({ type: 'choice', validation: ['A', 'B'], default: 'C' }))
+      ]
 
       _.each(fns, fn => expect(fn).to.throw(/invalid default value/i))
     })
@@ -107,11 +105,9 @@ describe('configurator', function() {
       expect(config.options.key1.env).to.not.be.undefined
       expect(config.options.key1.default).to.not.be.undefined
     })
-
   })
 
   describe('validateSave', function() {
-
     it('dont throw if missing mandatory key', function() {
       const args = getValidCreateArgs()
       const config = createConfig(args)
@@ -135,5 +131,4 @@ describe('configurator', function() {
       expect(fn).to.throw(/key2/i)
     })
   })
-
 })
